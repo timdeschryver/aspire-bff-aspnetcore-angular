@@ -14,7 +14,7 @@
     if (hostEnvironment.IsDevelopment())
     {
         var httpClient = new HttpClient();
-        source = await httpClient.GetStringAsync($"{config["UiDevServerUrl"]}/index.html");
+        source = await httpClient.GetStringAsync($"{config["BFF_ANGULAR_HTTPS"] ?? config["BFF_ANGULAR_HTTP"]}/index.html");
     }
     else
     {

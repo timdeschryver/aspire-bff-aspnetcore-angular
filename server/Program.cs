@@ -1,6 +1,7 @@
 ﻿using NetEscapades.AspNetCore.SecurityHeaders.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -66,7 +67,8 @@ services.AddRazorPages().AddMvcOptions(options =>
 }).AddMicrosoftIdentityUI();
 
 services.AddReverseProxy()
-        .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+        .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+        .AddServiceDiscoveryDestinationResolver();
 
 var app = builder.Build();
 
@@ -98,11 +100,7 @@ app.MapNotFound("/api/{**segment}");
 
 if (app.Environment.IsDevelopment())
 {
-    var uiDevServer = app.Configuration.GetValue<string>("UiDevServerUrl");
-    if (!string.IsNullOrEmpty(uiDevServer))
-    {
-        app.MapReverseProxy();
-    }
+    app.MapReverseProxy();
 }
 
 app.MapFallbackToPage("/_Host");
